@@ -254,6 +254,7 @@ for iev, event in enumerate(reader):
        if pnu==1:
           continue
        #定义inu，为了确保轻子与玻色子对应
+       #对于这个事件，这一步不是必须的，因为W+玻色子产生的一定是l+
        inu=0
        w=filter(lambda x: abs(x.pdgid)==24, event.particles)
        for ww in map(lambda x:x,w):
