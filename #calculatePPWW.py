@@ -5,7 +5,7 @@ from skhep.math import LorentzVector
 import math
 from scipy.integrate import tplquad,dblquad,quad
 import matplotlib.pyplot as plt
-#定义pn±，定义详见论文
+#定义球谐函数pn±
 def p1_plus(theta, phi):
     return np.sqrt(2) * np.sin(theta) * (5 * np.cos(theta) + 1) * np.cos(phi)
 
