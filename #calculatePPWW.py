@@ -57,7 +57,6 @@ def p8_minus(theta):
 cstheta=[]
 
 I3tion=[]
-cros_sec=1
 #坐标系旋转和洛伦兹变换
 def getxyz(pront1,k1,v,patl):
    #significant的定义用于筛选散射角
