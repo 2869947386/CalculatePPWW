@@ -120,8 +120,6 @@ def calculate_I3(h):
 reader = LHEReader('path to file/decay.lhe')
 #散射角cosΘ
 cstheta=[]
-#I3分布
-I3tion=[]
 
 #W+散射出轻子的θ，φ
 asind=0#θ
@@ -163,7 +161,7 @@ H17=np.zeros((8,8))
 H18=np.zeros((8,8))
 n=0
 cros_sec=1.742#pb
-def im(pati):#lhe文件里其实有不变质量，不过经验证这里的计算是正确的
+def im(pati):#lhe文件里其实有不变质量，不过可以验证这里的计算是正确的
    e2=(pati.e)**2
    px2=(pati.px)**2
    py2=(pati.py)**2
@@ -171,7 +169,9 @@ def im(pati):#lhe文件里其实有不变质量，不过经验证这里的计算
    m2=e2-px2-py2-pz2
    imass=math.sqrt(m2)
    return imass
-#用于计算一定不变质量和cosθ的I3
+#I3分布
+I3tion=[]    
+#用于计算一定不变质量和cosθ的I3#，该部分后加的可能不太完善
 def calculaateI32(qi,cstheta,i3w,nw):
     if 0.7<cstheta[-1]<0.75:
           nw[0,qi]=nw[0,qi]+1
@@ -265,16 +265,17 @@ for iev, event in enumerate(reader):
     ipp=0
     #根据pdgid寻找粒子，根据cosθ±定义选择
     aparticle = filter(lambda x: abs(x.pdgid) in(11,13,15,17), event.particles)
+    #包含中微子，不加绝对值
     #aparticle = filter(lambda x: x.pdgid in(11,12,13,14,15,16), event.particles)
     #pp为轻子，ww为w玻色子
     for pp in map(lambda x: x, aparticle):
        #排除只产生一个W玻色子的情况，与pnu有关的都是
        if pp.parent==1 or pp.parent==0:
-         pnu=1
-         continue
+          pnu=1
+          continue
        if pnu==1:
           continue
-       #定义inu，为了确保轻子与玻色子对应，这里其实并不必要，因为W+散射的一定为l+
+       #定义inu，为了确保轻子与玻色子对应，对于该物理事件，这里其实并不必要，因为W+散射的一定为l+
        inu=0
        w=filter(lambda x: abs(x.pdgid)==24, event.particles)
        for ww in map(lambda x:x,w):
@@ -336,7 +337,7 @@ for iev, event in enumerate(reader):
                afid1=aphi
                ptm.append(pt1)
           inu=inu+1
-    #计算一定不变质量和cosθ内的I3
+    #计算一定不变质量和cosθ内的I3，后加的可能不太完善
     if 130<vmw1<140:
        i3w,nw=calculaateI32(0,cstheta,i3w,nw)
     if 140<vmw1<150:
@@ -375,17 +376,23 @@ for iev, event in enumerate(reader):
     #C21=2*calculate_c2(F,G,H)
     #if C21<0:
     #  print('c2-')
-    #检验程序运行一次
+    #检验程序用，运行一次
     #break
+    #筛选散射角
     if significantn1*significantn2 !=0:
+        
      costp.append(np.cos(asind))
      costm.append(np.cos(asind1))
+     
      theta_p.append(asind)
      phi_p.append(afid)
+        
      theta_m.append(asind1)
      phi_m.append(afid1)
+        
      phi_all.append(afid)
      phi_all.append(afid1)
+     #I3分布   
      I3tion.append(calculate_I3(Htion))
 print(n)
 F1=F/(n)
@@ -395,7 +402,9 @@ C2=2*calculate_c2(F1,G1,H1)
 print(C2)
 I3=calculate_I3(H1)
 print(I3)
-#画图
+
+#使用matplotlib画图
+
 #散射角余弦值 1
 data1=cstheta
 plt.hist(data1,bins=25)
