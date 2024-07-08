@@ -53,15 +53,11 @@ def p7_minus(theta, phi):
 
 def p8_minus(theta):
     return (1 / np.sqrt(48)) * (-5 - 12*np.cos(theta) - 15*np.cos(2 * theta))
-#记录散射角cosΘ
-cstheta=[]
-
-I3tion=[]
 #坐标系旋转和洛伦兹变换
 def getxyz(pront1,k1,v,patl):
    #significant的定义用于筛选散射角
    significant1=1
-   #质子速度（方向单位矢量）（质心系中质子速度均为（0,0,1））
+   #质子速度（方向的单位矢量）（这里假设质心系中质子速度均为（0,0,1））
    pront=pront1
    #求玻色子速度大小
    k2=np.power(k1,2)
@@ -122,9 +118,14 @@ def calculate_I3(h):
     return 4*(h[3,3] + h[4,4]) - (4*np.sqrt(3)/3) * (h[5,0] + h[5,5] + h[6,1] + h[6,6] + h[0,0] + h[0,5] + h[1,1] + h[1,6])
 #读取lhe文件
 reader = LHEReader('path to file/decay.lhe')
+#散射角cosΘ
+cstheta=[]
+#I3分布
+I3tion=[]
+
 #W+散射出轻子的θ，φ
-asind=0
-afid=0
+asind=0#θ
+afid=0#φ
 
 theta_p=[]
 phi_p=[]
@@ -144,6 +145,7 @@ ptp=[]
 ptm=[]
 #不变质量
 vmw=[]
+
 nw=np.zeros((6,6))
 i3w=np.zeros((6,6))
 Htion=np.zeros((8,8))
@@ -255,6 +257,7 @@ def p2(i,theta, phi):
       return p7_minus(theta, phi)
     if i==8:
       return p8_minus(theta)
+对每个事件进行处理
 for iev, event in enumerate(reader):
     vmw1=0
     pnu=0
